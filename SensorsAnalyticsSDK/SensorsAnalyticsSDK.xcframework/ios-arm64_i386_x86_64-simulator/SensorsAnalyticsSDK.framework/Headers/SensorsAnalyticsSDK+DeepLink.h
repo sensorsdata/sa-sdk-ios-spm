@@ -19,6 +19,7 @@
 //
 
 #import "SensorsAnalyticsSDK.h"
+#import "SASlinkCreator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// DeepLink 获取归因数据所用时间，单位毫秒
 @property (nonatomic, assign) NSInteger appAwakePassedTime;
+
+/// custom params
+@property (nonatomic, copy, nullable) NSDictionary *customParams;
 
 @end
 

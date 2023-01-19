@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SAConstants.h"
-#import "SAPropertyPluginProtocol.h"
+#import "SAPropertyPlugin.h"
 
 @class SASecurityPolicy;
 @class SAConfigOptions;
@@ -354,21 +354,14 @@ extern NSString * const SensorsAnalyticsIdentityKeyEmail;
 - (NSDictionary *)getLastScreenTrackProperties API_UNAVAILABLE(macos);
 
 /**
- @abstract
- * Track App Extension groupIdentifier 中缓存的数据
- *
- * @param groupIdentifier groupIdentifier
- * @param completion  完成 track 后的 callback
- */
-- (void)trackEventFromExtensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSArray *events)) completion;
-
-/**
  * @abstract
  * 修改入库之前的事件属性
  *
  * @param callback 传入事件名称和事件属性，可以修改或删除事件属性。请返回一个 BOOL 值，true 表示事件将入库， false 表示事件将被抛弃
  */
 - (void)trackEventCallback:(BOOL (^)(NSString *eventName, NSMutableDictionary<NSString *, id> *properties))callback;
+
+- (void)registerLimitKeys:(NSDictionary<SALimitKey, NSString *> *)keys;
 
 /**
  * @abstract
@@ -426,6 +419,14 @@ extern NSString * const SensorsAnalyticsIdentityKeyEmail;
  * @return 当前的 superProperty 的副本
  */
 - (NSDictionary *)currentSuperProperties;
+
+/**
+ * @abstract
+ * 注册属性插件
+ *
+ * @param plugin 属性插件对象
+ */
+- (void)registerPropertyPlugin:(SAPropertyPlugin *)plugin;
 
 /**
  * @abstract
