@@ -5,23 +5,13 @@
 // Created by 储强盛 on 2019/4/8.
 // Copyright © 2015-2022 Sensors Data Co., Ltd. All rights reserved.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 
 #import <Foundation/Foundation.h>
 #import "SAStorePlugin.h"
 #import "SAConstants.h"
 #import "SAPropertyPlugin.h"
+
+typedef BOOL(^SAEventCallback)(NSString * _Nonnull event, NSMutableDictionary<NSString *, id> * _Nonnull properties);
 
 @class SASecretKey;
 @class SASecurityPolicy;
@@ -55,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion
  默认使用 defaultPolicy
  */
-@property (nonatomic, strong) SASecurityPolicy *securityPolicy API_UNAVAILABLE(macos, tvos);
+@property (nonatomic, strong) SASecurityPolicy *securityPolicy;
 
 /**
  * @abstract
@@ -143,6 +133,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 注册限制采集的敏感属性
 - (void)registerLimitKeys:(NSDictionary<SALimitKey, NSString *> *)keys;
+
+/// 自定义埋点数据存储路径
+///
+/// macOS 开发，针对多应用场景，可以使用相同数据库文件，确保每个应用触发 flush 后，上传所有埋点数据，使用 .plist 作为文件名后缀
+@property (nonatomic, strong) NSString *databaseFilePath API_UNAVAILABLE(ios, tvos, watchos);
+
+@property (nonatomic, assign) SAResourcesLanguage resourcesLanguage;
+
+
+/// event callback, used to modify event properties before inserting to DB, and also return NO to drop the event.
+/// Please use this callback with caution, if used improperly, it may result in loss of event data
+@property (nonatomic, copy, nullable) SAEventCallback trackEventCallback;
 
 @end
 
